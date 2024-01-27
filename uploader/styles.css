@@ -8,3 +8,51 @@ body {
 pre#ampy-help {
     font-size: 20px;
 }
+
+.hidden {
+    display: none !important;
+}
+
+#modal {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0009;
+}
+#modal>*{
+    background-color: #fff9;
+}
+
+form#ports-form>table {
+    border-collapse: collapse;
+    color: black;
+    margin-top: 20px;
+}
+
+form#ports-form>table>label {
+    display: table-row;
+    border-collapse: collapse;
+}
+
+form#ports-form>table>label:first-child {
+    background-color: gray;
+}
+
+form#ports-form>table>label:nth-child(even) {
+    background-color: lightgray;
+}
+
+form#ports-form>table>label>span {
+    display: table-cell;
+    padding: 5px;
+    border-collapse: collapse;
+}
+
+#ampy-help{
+    white-space: pre;
+}

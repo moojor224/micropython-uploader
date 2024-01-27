@@ -9,18 +9,36 @@
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./vanilla-tree-viewer.min.css">
     <script src="./highlight/highlight.min.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/jstree/jstree.min.js"></script>
+    <link rel="stylesheet" href="./js/jstree/themes/default-dark/style.min.css">
+    <script>
+        $.jstree.defaults.types = {
+            file: { icon: "fa-brands fa-file" },
+            folder: { icon: "fa-duotone fa-folder" },
+            python: { icon: "fa-brands fa-python" },
+            html: { icon: "fa-brands fa-html5" },
+            js: { icon: "fa-brands fa-js" },
+            json: { icon: "fa-solid fa-brackets-curly" }
+        }
+    </script>
 </head>
 
 <body>
-    <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
-    <ol class="vtv" data-language="python">
+    <div id="modal"></div>
+    <div id="ampy-help"></div>
+    <form id="ports-form">
 
-    </ol>
+    </form>
+    <div class="vtv" data-language="python">
+
+    </div>
     <pre id="ampy-help"></pre>
-    <script src="./jstools.js"></script>
-    <script src="./app.js"></script>
-    <script type="text/javascript" src="./vanilla-tree-viewer.min.js"></script>
     <script src="monaco-editor/min/vs/loader.js"></script>
+    <script src="./jstools.js"></script>
+    <script src="./vanilla-tree-viewer.min.js"></script>
+    <script src="./js/tab.js"></script>
+    <script src="./app.js"></script>
     <script>
         const sleep = (milliseconds) => {
             return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -35,12 +53,12 @@
             while (!monacoAvailable) {
                 await sleep(100);
             }
-            
+
         }
-        awaitMonaco();3
+        awaitMonaco(); 3
 
 
-        
+
     </script>
 </body>
 
