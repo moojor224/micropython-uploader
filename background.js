@@ -8,7 +8,7 @@ const { SerialPort } = require("serialport");
  * @param {String} port serial port
  */
 function sanitizeSerial(port) {
-    let regex = /(COM\d+|\/dev\/tty(S\d+|\/\d+))/g;
+    let regex = /(COM\d+|\/dev\/tty(S\d+|\/\d+|ACM\d+))/g;
     let matches = port.match(regex);
     if (!matches) {
         return false;

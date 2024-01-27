@@ -48,6 +48,7 @@ function clearModal(event, packet) {
 async function init(){
     modal("getting serial ports");
     await getPorts();
+    setInterval(getPorts, 3000);
     clearModal();
 }
 init();
@@ -56,7 +57,7 @@ async function sendMessage(channel, data = "") {
     let response = await new Promise(function (resolve, reject) {
         let responseFunc = function (event, packet) {
             ipcRenderer.removeAllListeners(channel + "-response");
-            console.log(`got response on: "${channel}-response":`, packet);
+            // console.log(`got response on: "${channel}-response":`, packet);
             if(packet.error){
                 console.error("error:", packet);
                 reject(packet);
@@ -64,7 +65,7 @@ async function sendMessage(channel, data = "") {
             resolve(packet);
         };
         ipcRenderer.on(channel + "-response", responseFunc);
-        console.log(`sending data on: "${channel}"`, data);
+        // console.log(`sending data on: "${channel}"`, data);
         ipcRenderer.postMessage(channel, data);
     });
     return response;
@@ -89,7 +90,7 @@ function updatePortsList(ports) {
                 createElement("span", { innerHTML: "friendly name" }),
                 createElement("span", { innerHTML: "serial number" }),
             ),
-            ...ports.map(p => {
+            ...ports.filter(e=>e.manufacturer).map(p => {
                 let el = createElement("label").add(
                     createElement("span").add(createElement("input", {
                         type: "radio",
@@ -123,6 +124,6 @@ async function ampyHelp() {
 
 async function getPorts() {
     let ports = await sendMessage("get-ports");
-    console.log("ports:", ports);
+    // console.log("ports:", ports);
     updatePortsList(ports);
 }
