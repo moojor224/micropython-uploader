@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"> -->
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./vanilla-tree-viewer.min.css">
+    <script src="./highlight/highlight.min.js"></script>
+</head>
+
+<body>
+    <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+    <ol class="vtv" data-language="python">
+
+    </ol>
+    <pre id="ampy-help"></pre>
+    <script src="./jstools.js"></script>
+    <script src="./app.js"></script>
+    <script type="text/javascript" src="./vanilla-tree-viewer.min.js"></script>
+    <script src="monaco-editor/min/vs/loader.js"></script>
+    <script>
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        }
+        let monacoAvailable = false;
+        require.config({ paths: { vs: 'monaco-editor/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            monaco.editor.setTheme("vs-dark");
+            monacoAvailable = true;
+        });
+        async function awaitMonaco() {
+            while (!monacoAvailable) {
+                await sleep(100);
+            }
+            
+        }
+        awaitMonaco();3
+
+
+        
+    </script>
+</body>
+
+</html>

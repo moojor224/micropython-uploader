@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+
+<body>
+    <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+
+    <script src="monaco-editor/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { vs: 'monaco-editor/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            let editor = monaco.editor.create(document.getElementById('container'), {
+                value: `import time
+
+def countdown(time_sec):DEFSWXZG jmbknhzdxsbcdfszxjkbmn adfsxzcjnkm, acdsxzf jknhadzfjhkmn 
+    while time_sec:
+        mins, secs = divmod(time_sec, 60)
+        timeformat = '{:02d}:{:02d}'.format(mins, secs)
+        print(timeformat, end='\\r')
+        time.sleep(1)
+        time_sec -= 1
+
+    print("stop")
+
+countdown(5)`,
+                language: 'python'
+            });
+            let saved = true;
+            function updateSave() {
+                document.getElementById("save-status").innerHTML = saved ? "saved !" : "unsaved changes!";
+            }
+
+            function saveFile() {
+                console.log("uploading file to board");
+            }
+            editor.onDidChangeModelContent(function (event) {
+                saved = false;
+                updateSave();
+            });
+
+            editor.onKeyDown(function (event) {
+                if (event.browserEvent.ctrlKey && event.browserEvent.key.toLowerCase() == "s") {
+                    event.preventDefault();
+                    if (!saved) {
+                        saveFile();
+                    }
+                    saved = true;
+                }
+                updateSave();
+            });
+        });
+    </script>
+</body>
+
+</html>

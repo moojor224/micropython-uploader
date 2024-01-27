@@ -1,0 +1,17 @@
+{
+  "name": "micropython-uploader",
+  "version": "1.0.0",
+  "description": "GUI for ampy",
+  "main": "background.js",
+  "author": "Jordan Moore",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.2.0"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "serialport": "^12.0.0"
+  }
+}

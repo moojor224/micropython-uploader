@@ -1,0 +1,15 @@
+{
+    "editor.bracketPairColorization.enabled": true,
+    // "editor.guides.bracketPairs": true,
+    "editor.guides.bracketPairsHorizontal": true,
+    "editor.guides.highlightActiveBracketPair": true,
+    "workbench.colorCustomizations": {
+        "editorBracketHighlight.foreground1": "#f00",
+        "editorBracketHighlight.foreground2": "#f70",
+        "editorBracketHighlight.foreground3": "#ff0",
+        "editorBracketHighlight.foreground4": "#0f0",
+        "editorBracketHighlight.foreground5": "#00f",
+        "editorBracketHighlight.foreground6": "#f0f",
+    },
+    "window.title": "micropython uploader"
+}
