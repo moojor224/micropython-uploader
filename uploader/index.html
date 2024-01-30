@@ -25,6 +25,56 @@
 </head>
 
 <body>
+    <form class="tabbed-form">
+        <div class="tabbed-view">
+            <div class="tabs" id="outer_tabs">
+                <!-- <tab class="tab1">
+                    <label>
+                        <span>tab 1</span>
+                        <input type="radio" name="tabs">
+                    </label>
+                </tab>
+                <tab class="tab2">
+                    <label>
+                        <span>tab 2</span>
+                        <input type="radio" name="tabs">
+                    </label>
+                </tab>
+                <tab class="tab3">
+                    <label>
+                        <span>tab 3</span>
+                        <input type="radio" name="tabs">
+                    </label>
+                </tab>
+                <tab class="tab4">
+                    <label>
+                        <span>tab 4</span>
+                        <input type="radio" name="tabs">
+                    </label>
+                </tab>
+                <tab class="tab5">
+                    <label>
+                        <span>tab 5</span>
+                        <input type="radio" name="tabs">
+                    </label>
+                </tab>
+                <tab class="tab6">
+                    <label>
+                        <span>tab 6</span>
+                        <input type="radio" name="tabs">
+                    </label>
+                </tab> -->
+            </div>
+            <div class="content" id="outer_content">
+                <!-- <div class="tab1">tab 1 content</div>
+                <div class="tab2">tab 2 content</div>
+                <div class="tab3">tab 3 content</div>
+                <div class="tab4">tab 4 content</div>
+                <div class="tab5">tab 5 content</div>
+                <div class="tab6">tab 6 content</div> -->
+            </div>
+        </div>
+    </form>
     <div id="modal"></div>
     <div id="ampy-help"></div>
     <form id="ports-form">
@@ -40,9 +90,9 @@
     <script src="./js/tab.js"></script>
     <script src="./app.js"></script>
     <script>
-        const sleep = (milliseconds) => {
-            return new Promise(resolve => setTimeout(resolve, milliseconds))
-        }
+        // const sleep = (milliseconds) => {
+        //     return new Promise(resolve => setTimeout(resolve, milliseconds))
+        // }
         let monacoAvailable = false;
         require.config({ paths: { vs: 'monaco-editor/min/vs' } });
         require(['vs/editor/editor.main'], function () {
@@ -53,9 +103,12 @@
             while (!monacoAvailable) {
                 await sleep(100);
             }
-
+            let t1 = new Tab({}).makeMonaco();
+            new Tab({}).makeMonaco();
+            new Tab({}).makeMonaco();
+            new Tab({}).makeMonaco();
+            new Tab({}).makeMonaco();
         }
-        awaitMonaco(); 3
 
 
 

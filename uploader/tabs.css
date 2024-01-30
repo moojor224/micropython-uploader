@@ -1,0 +1,122 @@
+/* div.tabbed-view {
+    counter-reset: tabs;
+}
+
+div.tabs>tab:has(~tab input:checked) {
+    counter-increment: tabs;
+}
+
+div.counter::after {
+    content: counter(tabs);
+    display: block;
+    width: 30px;
+    height: 30px;
+} */
+
+div.tabbed-view:has(div.tabs>tab.tab1>label>input:checked)>div.content>div.tab1,
+div.tabbed-view:has(div.tabs>tab.tab2>label>input:checked)>div.content>div.tab2,
+div.tabbed-view:has(div.tabs>tab.tab3>label>input:checked)>div.content>div.tab3,
+div.tabbed-view:has(div.tabs>tab.tab4>label>input:checked)>div.content>div.tab4,
+div.tabbed-view:has(div.tabs>tab.tab5>label>input:checked)>div.content>div.tab5,
+div.tabbed-view:has(div.tabs>tab.tab6>label>input:checked)>div.content>div.tab6 {
+    display: block;
+}
+
+* {
+    /* outline: 2px solid red; */
+    outline-offset: -1px;
+}
+
+form.tabbed-form {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: block;
+}
+
+div.tabbed-view>div {
+    /* border: 3px solid blue; */
+    box-sizing: border-box;
+    grid-column: 1 / span 1;
+}
+
+div.tabbed-view {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    height: 100%
+}
+
+div.tabbed-view>div.content {
+    grid-row: 2 / span 1;
+    height: 100%;
+}
+
+div.tabbed-view>div.content>div {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+div.tabbed-view>div.tabs {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    transform: rotateX(180deg);
+    grid-row: 1 / span 1;
+}
+
+div.tabbed-view>div.tabs>tab {
+    transform: rotateX(180deg);
+    display: inline-block;
+    flex-shrink: 1;
+    min-width: 100px;
+    width: 200px;
+    max-width: 200px;
+    background-color: #5ebeff;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    color: black;
+}
+
+div.tabbed-view>div.tabs>tab:has(input:checked)>label,
+div.tabbed-view>div.tabs>tab:has(input:checked)>label>span {
+    background-color: #5ebeff;
+}
+
+/* curved corners on selected tab */
+/* div.tabbed-view>div.tabs>tab:has(input:checked)+tab>label,
+div.tabbed-view>div.tabs>tab:has(input:checked)+tab>label>span {
+    border-bottom-left-radius: 15px;
+}
+div.tabbed-view>div.tabs>tab:has(+tab>label>input:checked)>label,
+div.tabbed-view>div.tabs>tab:has(+tab>label>input:checked)>label>span {
+    border-bottom-right-radius: 15px;
+} */
+
+
+
+
+div.tabbed-view>div.tabs>tab:hover {
+    filter: brightness(80%);
+}
+
+div.tabbed-view>div.tabs>tab>label,
+div.tabbed-view>div.tabs>tab span {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+div.tabbed-view>div.tabs>tab input {
+    display: none;
+}
+
+div.tabbed-view>div.tabs>tab>label>span {
+    box-sizing: border-box;
+    padding: 10px;
+    overflow-x: hidden;
+}

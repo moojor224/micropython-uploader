@@ -1,8 +1,11 @@
+@import 'tabs.css';
+
 body {
     margin: 0px;
     padding: 0px;
     color: white;
     background-color: black;
+    height: 100vh;
 }
 
 pre#ampy-help {

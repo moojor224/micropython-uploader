@@ -45,10 +45,22 @@ function clearModal(event, packet) {
     modal.classList.add("hidden");
 }
 
-async function init(){
+async function sleep(duration) {
+    await new Promise(r => setTimeout(r, duration));
+}
+
+async function awaitMonaco() {
+    while (!monaco) {
+        await sleep(1000);
+    }
+}
+
+async function init() {
     modal("getting serial ports");
-    await getPorts();
-    setInterval(getPorts, 3000);
+    await getSerialPorts();
+    setInterval(getSerialPorts, 3000);
+    modal("waiting for monaco to initialize");
+    await awaitMonaco();
     clearModal();
 }
 init();
@@ -58,7 +70,7 @@ async function sendMessage(channel, data = "") {
         let responseFunc = function (event, packet) {
             ipcRenderer.removeAllListeners(channel + "-response");
             // console.log(`got response on: "${channel}-response":`, packet);
-            if(packet.error){
+            if (packet.error) {
                 console.error("error:", packet);
                 reject(packet);
             }
@@ -90,7 +102,7 @@ function updatePortsList(ports) {
                 createElement("span", { innerHTML: "friendly name" }),
                 createElement("span", { innerHTML: "serial number" }),
             ),
-            ...ports.filter(e=>e.manufacturer).map(p => {
+            ...ports.filter(e => e.manufacturer).map(p => {
                 let el = createElement("label").add(
                     createElement("span").add(createElement("input", {
                         type: "radio",
@@ -122,7 +134,7 @@ async function ampyHelp() {
     document.getElementById("ampy-help").innerHTML = help;
 }
 
-async function getPorts() {
+async function getSerialPorts() {
     let ports = await sendMessage("get-ports");
     // console.log("ports:", ports);
     updatePortsList(ports);
