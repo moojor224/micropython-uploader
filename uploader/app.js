@@ -275,10 +275,11 @@ class FileTree {
         // console.log("open", this.content);
         this.isOpen = true;
         this.tab = new Tab({
-            name: this.label
+            name: this.label,
+            code: this.content.replaceAll("\r", "")
         });
         console.log("opened", this.tab);
-        this.tab.makeMonaco(this.content);
+        this.tab.makeMonaco();
     }
 
     render() {

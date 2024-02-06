@@ -17,7 +17,7 @@ function template(strings, ...keys) {
 
 
 let tabIndex = 0;
-let tabCSS = template`div.tabbed-view:has(div.tabs>tab.tab${"index"} input:checked)>div.content>div.tab${"index"}`;
+let tabCSS = template`div.tabbed-view>div.content:has(+div.tabs>tab.tab${"index"}>label>input:checked)>div.tab${"index"}`;
 let tabStyle = createElement("style");
 document.head.add(tabStyle);
 
@@ -50,7 +50,7 @@ class Tab {
         }).add(
             createElement("label").add(
                 createElement("span", {
-                    innerHTML: "tab " + this.index
+                    innerHTML: this.config.name
                 }),
                 createElement("input", {
                     type: "radio",
@@ -66,6 +66,7 @@ class Tab {
         if (typeof this.config.tab_container == "string") this.config.tab_container = document.querySelector(this.config.tab_container);
         this.config.content_container.add(this.content);
         this.config.tab_container.add(this.tab);
+        generateCSS();
     }
 
     close() {
