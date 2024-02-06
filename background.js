@@ -7,7 +7,8 @@ const { SerialPort } = require("serialport");
  * checks if string is a valid serial port
  * @param {String} port serial port
  */
-function sanitizeSerial(port) {
+function sanitizeSerial(port = "") {
+    port = (typeof port == "string") ? port : "";
     let regex = /(COM\d+|\/dev\/tty(S\d+|\/\d+|ACM\d+))/g;
     let matches = port.match(regex);
     if (!matches) {
@@ -95,7 +96,30 @@ ipcMain.on("ampy-help", function (event, packet) {
         if (stderr) console.warn("stderr:", stderr);
         event.reply("ampy-help-response", stdout);
     });
+});
+
+ipcMain.on("ampy-more-help", function (event, packet) {
+    console.log(`ampy: showing more ampy help for ${packet.command}`);
+    exec(`ampy -p ${packet.port} ${packet.command.replaceAll(/[^a-z]/g, "")} --help`, function (error, stdout, stderr) {
+        if (error) {
+            console.error("error:", error);
+            event.reply("ampy-more-help-response", { error: error });
+        }
+        if (stderr) console.warn("stderr:", stderr);
+        event.reply("ampy-more-help-response", stdout);
+    });
 })
+
+ipcMain.on("check-micropython", function (event, packet) {
+    console.log("checking if device is a micropython device");
+    let port = sanitizeSerial(packet);
+    if (!port) return event.reply("check-micropython-response", ["piss off, hacker man", packet]);
+    exec(`ampy -p ${port} ls --help`, function (error, stdout, stderr) {
+        if (error) event.reply("check-micropython-response", false) // not a mpy device
+        if (stderr) event.reply("check-micropython-response", false); // not a mpy device
+        event.reply("check-micropython-response", true); // mpy device
+    });
+});
 
 
 

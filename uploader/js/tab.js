@@ -24,14 +24,15 @@ class Tab {
     #tab = this;
     config = {
         name: "new tab",
-        tab_container: "#outer_tabs",
-        content_container: "#outer_content",
-        language: "python"
+        tab_container: "#inner_tabs",
+        content_container: "#inner_content",
+        language: "python",
+        name_prefix: "inner-",
+        code: `def main():\n    print("this is tab ${this.index}")`,
+        autoSaveInterval: 1500,
     }
     constructor(config = {}) {
-        tabIndex++;
-        this.index = tabIndex;
-        this.config.code = `def main():\n    print("this is tab ${this.index}")`;
+        this.index = ++tabIndex;
         extend(this.config, config);
         tabs.push(this.makeCss());
 
@@ -65,11 +66,21 @@ class Tab {
     makeCss() {
         return tabCss({ index: tabIndex });
     }
-    makeMonaco(code) {
-        console.trace(this.content);
+    timeout = null;
+    makeMonaco() {
+        // console.trace(this.content);
         this.editor = monaco.editor.create(this.content, {
             value: this.config.code,
-            language: this.config.language
+            language: this.config.language,
+            automaticLayout: true
+        });
+        let tab = this;
+        this.editor.getModel().onDidChangeContent(function () {
+            clearTimeout(this.timeout);
+            tab.timeout = setTimeout(function () {
+                this.saveFile();
+            }, this.config.autoSaveInterval);
         });
     }
+
 }

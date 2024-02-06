@@ -27,8 +27,14 @@ pre#ampy-help {
     align-items: center;
     background-color: #0009;
 }
-#modal>*{
+
+#modal>* {
     background-color: #fff9;
+}
+
+form#ports-form {
+    display: inline-block;
+    min-width: 50%;
 }
 
 form#ports-form>table {
@@ -43,10 +49,14 @@ form#ports-form>table>label {
 }
 
 form#ports-form>table>label:first-child {
-    background-color: gray;
+    background-color: gray !important;
 }
 
 form#ports-form>table>label:nth-child(even) {
+    background-color: darkgray;
+}
+
+form#ports-form>table>label:nth-child(odd) {
     background-color: lightgray;
 }
 
@@ -56,6 +66,82 @@ form#ports-form>table>label>span {
     border-collapse: collapse;
 }
 
-#ampy-help{
+#ampy-help {
     white-space: pre;
+    padding-left: 20px;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+div.grid-app {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-columns: 20vw 80vw;
+    grid-template-rows: 100vh;
+}
+
+div.grid-app>div.file-tree {
+    grid-row: 1 / span 1;
+    grid-column: 1 / span 1;
+}
+
+div.grid-app>form.tabbed-form {
+    grid-row: 1 / span 1;
+    grid-column: 2 / span 1;
+}
+
+#ampy-more-help table pre {
+    padding: 10px;
+}
+
+#ampy-more-help table,
+#ampy-more-help table tr,
+#ampy-more-help table td {
+    border-collapse: collapse;
+}
+
+#ampy-more-help table td {
+    border-collapse: collapse;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+#ampy-more-help table td:nth-child(2) pre {
+    max-width: 200px;
+    word-wrap: break-word;
+    text-wrap: wrap;
+}
+
+:root {
+    --modal-shadow: 2px;
+}
+
+.text-border {
+    color: black;
+    text-shadow: var(--modal-shadow) var(--modal-shadow) 0px #fff,
+        var(--modal-shadow) calc(var(--modal-shadow) * -1) 0px #fff,
+        calc(var(--modal-shadow) * -1) var(--modal-shadow) 0px #fff,
+        calc(var(--modal-shadow) * -1) calc(var(--modal-shadow) * -1) 0px #fff;
+}
+
+.text-border.white {
+    color: white;
+    text-shadow: var(--modal-shadow) var(--modal-shadow) 0px #000,
+        var(--modal-shadow) calc(var(--modal-shadow) * -1) 0px #000,
+        calc(var(--modal-shadow) * -1) var(--modal-shadow) 0px #000,
+        calc(var(--modal-shadow) * -1) calc(var(--modal-shadow) * -1) 0px #000;
+}
+
+#modal span {
+    font-size: 60px;
+    font-family: sans-serif;
+    padding: 10px;
 }

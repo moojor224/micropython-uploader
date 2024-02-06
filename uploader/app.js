@@ -9,12 +9,13 @@ function makeMonaco(element = createElement("span"), language, value = "") {
     return element;
 }
 
-document.body.add(createElement("button", {
-    innerHTML: "ampy help",
-    onclick: function () {
-        ampyHelp();
-    }
-}));
+// document.querySelector("#ampy-help").parentElement.add(createElement("button", {
+//     innerHTML: "ampy help",
+//     type: "button",
+//     onclick: function () {
+//         ampyHelp();
+//     }
+// }));
 
 function parseFilesList(arr) {
     console.log("parsing files list");
@@ -34,7 +35,7 @@ function modal(text, icon = "fa-duotone fa-spinner-third fa-spin") {
     modal.innerHTML = "";
     modal.add(
         createElement("i", { classList: icon, style: "--fa-animation-duration: 1.5s;" }),
-        createElement("span", { innerHTML: text })
+        createElement("span", { classList: "text-border white", innerHTML: text })
     );
     modal.classList.remove("hidden");
 }
@@ -61,6 +62,12 @@ async function init() {
     setInterval(getSerialPorts, 3000);
     modal("waiting for monaco to initialize");
     await awaitMonaco();
+    modal("getting ampy help docs");
+    await ampyHelp();
+    if (getSerialPort(true)) {
+        modal("getting extended ampy help docs");
+        await getMoreHelp();
+    }
     clearModal();
 }
 init();
@@ -83,13 +90,15 @@ async function sendMessage(channel, data = "") {
     return response;
 }
 
-function getSerialPort() {
-    let port = new FormData(document.getElementById("ports-form")).get("selected-port");
-    console.log("selected port:", port);
-    return port;
+function getSerialPort(getDefault = false) {
+    let el = document.getElementById("ports-form");
+    let def = el.querySelector("input")?.value;
+    let port = new FormData(el).get("selected-port");
+    // console.log("selected port:", (port ? port : (getDefault ? def : port)));
+    return (port ? port : (getDefault ? def : port));
 }
 
-function updatePortsList(ports) {
+async function updatePortsList(ports) {
     let form = document.getElementById("ports-form");
     let formData = new FormData(form);
     let port = formData.get("selected-port");
@@ -120,6 +129,15 @@ function updatePortsList(ports) {
             })
         )
     );
+    if (!gotMoreHelp) {
+        console.log("checking more help");
+        let ismpy = await sendMessage("check-micropython", getSerialPort());
+        console.log("ismpy", ismpy);
+        if (!ismpy) return;
+        modal("getting extended ampy help docs");
+        await getMoreHelp();
+        clearModal();
+    }
 }
 
 async function ampyLS() {
@@ -128,10 +146,61 @@ async function ampyLS() {
     parseFilesList(files);
 }
 
+let helpText;
 async function ampyHelp() {
-    let help = await sendMessage("ampy-help");
-    console.log("ampy help:", help.replaceAll("\r", ""));
-    document.getElementById("ampy-help").innerHTML = help;
+    helpText = await sendMessage("ampy-help");
+    // console.log("ampy help:", helpText.replaceAll("\r", ""));
+    document.getElementById("ampy-help").innerHTML = helpText;
+}
+
+let gotMoreHelp = false;
+async function getMoreHelp() {
+    if (!helpText) {
+        return;
+    }
+    let help = helpText.replaceAll("\r", "").split("Commands:").pop().split("\n").map(e => e.trim()).filter(e => e);
+    help = help.map(com => {
+        com = com.split(" ").map(e => e.trim()).filter(e => e);
+        let command = com.shift();
+        let text = com.join(" ");
+        return { command, text };
+    });
+
+    let port = getSerialPort();
+    if (!port) {
+        document.getElementById("ampy-more-help").innerHTML = "";
+        document.getElementById("ampy-more-help").add(createElement("div", {
+            innerHTML: "please select a micropython device to get extended help information for individual commands",
+            style: {
+                padding: "5px",
+                backgroundColor: "#ff03",
+            }
+        }));
+        return;
+    }
+    gotMoreHelp = true;
+    for (let c in help) {
+        help[c].helpText = await sendMessage("ampy-more-help", {
+            command: help[c].command,
+            port
+        });
+    }
+    console.log(help);
+    let moreHelpEl = document.getElementById("ampy-more-help");
+    moreHelpEl.innerHTML = "";
+    moreHelpEl.add(createElement("table").add(
+        ...help.map(e => createElement("tr").add(
+            createElement("td").add(
+                createElement("pre", { innerHTML: e.command })
+            ),
+            createElement("td").add(
+                createElement("pre", { innerHTML: e.text })
+            ),
+            createElement("td").add(
+                createElement("pre", { innerHTML: e.helpText.replaceAll("\r", "") })
+            ),
+        ))
+    ));
 }
 
 async function getSerialPorts() {

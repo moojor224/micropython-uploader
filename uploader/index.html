@@ -25,65 +25,53 @@
 </head>
 
 <body>
-    <form class="tabbed-form">
-        <div class="tabbed-view">
-            <div class="tabs" id="outer_tabs">
-                <!-- <tab class="tab1">
-                    <label>
-                        <span>tab 1</span>
-                        <input type="radio" name="tabs">
-                    </label>
-                </tab>
-                <tab class="tab2">
-                    <label>
-                        <span>tab 2</span>
-                        <input type="radio" name="tabs">
-                    </label>
-                </tab>
-                <tab class="tab3">
-                    <label>
-                        <span>tab 3</span>
-                        <input type="radio" name="tabs">
-                    </label>
-                </tab>
-                <tab class="tab4">
-                    <label>
-                        <span>tab 4</span>
-                        <input type="radio" name="tabs">
-                    </label>
-                </tab>
-                <tab class="tab5">
-                    <label>
-                        <span>tab 5</span>
-                        <input type="radio" name="tabs">
-                    </label>
-                </tab>
-                <tab class="tab6">
-                    <label>
-                        <span>tab 6</span>
-                        <input type="radio" name="tabs">
-                    </label>
-                </tab> -->
-            </div>
-            <div class="content" id="outer_content">
-                <!-- <div class="tab1">tab 1 content</div>
-                <div class="tab2">tab 2 content</div>
+    <div class="grid-app">
+        <div class="file-tree"></div>
+        <form class="tabbed-form">
+            <div class="tabbed-view">
+                <div class="content" id="outer_content">
+                    <div class="tab1">
+                        <form></form><!-- DO NOT REMOVE THIS!!!
+                            chrome is stupid and auto-removes the first form inside a form-->
+                        <form id="ports-form">
+                        </form>
+                        <pre id="ampy-help"></pre>
+                        <pre id="ampy-more-help"></pre>
+                    </div>
+                    <div class="tab2">
+                        <form class="tabbed-form">
+                            <div class="tabbed-view">
+                                <div class="content" id="inner_content"></div>
+                                <div class="tabs scrollbar-hidden" id="inner_tabs"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- <div class="tab2">tab 2 content</div>
                 <div class="tab3">tab 3 content</div>
                 <div class="tab4">tab 4 content</div>
                 <div class="tab5">tab 5 content</div>
                 <div class="tab6">tab 6 content</div> -->
+                </div>
+                <div class="tabs scrollbar-hidden" id="outer_tabs">
+                    <tab class="tab1">
+                        <label>
+                            <span>Board Control</span>
+                            <input type="radio" name="outer-tabs" checked>
+                        </label>
+                    </tab>
+                    <tab class="tab2">
+                        <label>
+                            <span>File Editors</span>
+                            <input type="radio" name="outer-tabs">
+                        </label>
+                    </tab>
+                </div>
             </div>
-        </div>
-    </form>
-    <div id="modal"></div>
-    <div id="ampy-help"></div>
-    <form id="ports-form">
-
-    </form>
-    <div class="vtv" data-language="python">
-
+        </form>
     </div>
-    <pre id="ampy-help"></pre>
+
+    <div id="modal"></div>
+
     <script src="monaco-editor/min/vs/loader.js"></script>
     <script src="./jstools.js"></script>
     <script src="./vanilla-tree-viewer.min.js"></script>
@@ -103,11 +91,11 @@
             while (!monacoAvailable) {
                 await sleep(100);
             }
-            let t1 = new Tab({}).makeMonaco();
-            new Tab({}).makeMonaco();
-            new Tab({}).makeMonaco();
-            new Tab({}).makeMonaco();
-            new Tab({}).makeMonaco();
+            // let t1 = new Tab({}).makeMonaco();
+            // new Tab({}).makeMonaco();
+            // new Tab({}).makeMonaco();
+            // new Tab({}).makeMonaco();
+            // new Tab({}).makeMonaco();
         }
 
 

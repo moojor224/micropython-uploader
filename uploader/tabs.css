@@ -13,12 +13,11 @@ div.counter::after {
     height: 30px;
 } */
 
-div.tabbed-view:has(div.tabs>tab.tab1>label>input:checked)>div.content>div.tab1,
-div.tabbed-view:has(div.tabs>tab.tab2>label>input:checked)>div.content>div.tab2,
-div.tabbed-view:has(div.tabs>tab.tab3>label>input:checked)>div.content>div.tab3,
-div.tabbed-view:has(div.tabs>tab.tab4>label>input:checked)>div.content>div.tab4,
-div.tabbed-view:has(div.tabs>tab.tab5>label>input:checked)>div.content>div.tab5,
-div.tabbed-view:has(div.tabs>tab.tab6>label>input:checked)>div.content>div.tab6 {
+div.tabbed-view>div.content:has(+div.tabs>tab.tab1>label>input:checked)>div.tab1,
+div.tabbed-view>div.content:has(+div.tabs>tab.tab2>label>input:checked)>div.tab2,
+div.tabbed-view>div.content:has(+div.tabs>tab.tab3>label>input:checked)>div.tab3,
+div.tabbed-view>div.content:has(+div.tabs>tab.tab4>label>input:checked)>div.tab4,
+div.tabbed-view>div.content:has(+div.tabs>tab.tab5>label>input:checked)>div.tab5 {
     display: block;
 }
 
@@ -28,10 +27,15 @@ div.tabbed-view:has(div.tabs>tab.tab6>label>input:checked)>div.content>div.tab6 
 }
 
 form.tabbed-form {
-    width: 100%;
-    height: 100%;
+    width: 80vw;
+    height: 100vh;
+    outline: 1px solid white;
     box-sizing: border-box;
     display: block;
+}
+
+form.tabbed-form form.tabbed-form {
+    height: calc(100vh - 42px);
 }
 
 div.tabbed-view>div {
@@ -44,26 +48,44 @@ div.tabbed-view {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 1fr;
-    height: 100%
+    height: 100vh;
+}
+div.tabbed-view div.tabbed-view{
+    height: calc(100vh - 42px);
 }
 
 div.tabbed-view>div.content {
     grid-row: 2 / span 1;
-    height: 100%;
+    height: calc(100vh - 42px);
+}
+
+div.tabbed-view div.tabbed-view>div.content {
+    height: calc(100vh - 84px);
+}
+
+div.tabbed-view div.tabbed-view>div.content div.content {
+    height: calc(100vh - 84px);
 }
 
 div.tabbed-view>div.content>div {
     display: none;
-    width: 100%;
-    height: 100%;
+    width: 80vw;
+    height: calc(100vh - 42px);
+    overflow-y: auto;
+}
+
+div.tabbed-view div.tabbed-view>div.content>div {
+    height: calc(100vh - 84px);
 }
 
 div.tabbed-view>div.tabs {
     display: flex;
-    width: 100%;
+    width: 80vw;
+    height: 42px;
     overflow-x: auto;
     transform: rotateX(180deg);
     grid-row: 1 / span 1;
+    grid-column: 1 / span 1;
 }
 
 div.tabbed-view>div.tabs>tab {
