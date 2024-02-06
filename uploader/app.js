@@ -17,19 +17,6 @@ function makeMonaco(element = createElement("span"), language, value = "") {
 //     }
 // }));
 
-function parseFilesList(arr) {
-    console.log("parsing files list");
-    let ol = document.querySelector(".vtv");
-    ol.innerHTML = "";
-    arr.forEach(f => {
-        let el = createElement("div", { style: "width:800px;height:600px;border:1px solid grey" });
-        let { path, file } = f;
-        ol.add(el);
-        ol.add(makeMonaco(el, "python", file.replaceAll(/\r/g, "")));
-    });
-    // VanillaTreeViewer.renderAll();
-}
-
 function modal(text, icon = "fa-duotone fa-spinner-third fa-spin") {
     let modal = document.getElementById("modal");
     modal.innerHTML = "";
@@ -51,15 +38,18 @@ async function sleep(duration) {
 }
 
 async function awaitMonaco() {
-    while (!monaco) {
+    while (!window.monaco) {
         await sleep(1000);
     }
 }
 
 async function init() {
+    document.getElementById("connect-button").addEventListener("click", function () {
+        connectToBoard();
+    });
     modal("getting serial ports");
     await getSerialPorts();
-    setInterval(getSerialPorts, 3000);
+    document.getElementById("ampy-more-help-button").addEventListener("click", getSerialPorts);
     modal("waiting for monaco to initialize");
     await awaitMonaco();
     modal("getting ampy help docs");
@@ -102,8 +92,9 @@ async function updatePortsList(ports) {
     let form = document.getElementById("ports-form");
     let formData = new FormData(form);
     let port = formData.get("selected-port");
-    form.innerHTML = "";
-    form.add(
+    form.querySelectorAll(":not(button)").forEach(e => e.remove());
+    form.insertAdjacentElement(
+        "afterbegin",
         createElement("table").add(
             createElement("label").add(
                 createElement("span"),
@@ -130,10 +121,7 @@ async function updatePortsList(ports) {
         )
     );
     if (!gotMoreHelp) {
-        console.log("checking more help");
-        let ismpy = await sendMessage("check-micropython", getSerialPort());
-        console.log("ismpy", ismpy);
-        if (!ismpy) return;
+        if (!await sendMessage("check-micropython", getSerialPort())) return;
         modal("getting extended ampy help docs");
         await getMoreHelp();
         clearModal();
@@ -142,8 +130,7 @@ async function updatePortsList(ports) {
 
 async function ampyLS() {
     let files = await sendMessage("ampy-ls", getSerialPort());
-    console.log("files:", files);
-    parseFilesList(files);
+    return files;
 }
 
 let helpText;
@@ -207,4 +194,139 @@ async function getSerialPorts() {
     let ports = await sendMessage("get-ports");
     // console.log("ports:", ports);
     updatePortsList(ports);
+}
+
+class FileTree {
+    constructor(config) {
+        extend(this, config);
+    }
+    /**
+     * @type {TreeItem[]}
+     */
+    children = [];
+    label = "";
+    type = "";
+    content = "";
+    path = [];
+    /**
+     * 
+     * @param {String[]} path file path
+     * @param {String} content file contents
+     * @param {String[]} fullPath full path to the file
+     */
+    addFile(path, content, fullPath = null) {
+        // debugger
+        if (!Array.isArray(path)) path = path.split("/");
+        fullPath = fullPath || JSON.parse(JSON.stringify(path));
+        if (path.length > 1) {
+            let target = path.shift();
+            let file = this.find(target)
+            if (file) {
+                file.addFile(path, content);
+            } else {
+                let newFolder = new FileTree({
+                    type: "folder",
+                    label: target
+                });
+                newFolder.addFile(path, content, fullPath);
+                this.children.push(newFolder);
+            }
+        } else {
+            if (content === false) {
+                let newFolder = new FileTree({
+                    type: "folder",
+                    label: path[0]
+                });
+                this.children.push(newFolder);
+            } else {
+                this.children.push(new FileTree({
+                    type: "file",
+                    label: path[0],
+                    content,
+                    fullPath
+                }));
+            }
+
+        }
+        this.children.sort(dynamicSort("label")).sort(dynamicSort("-type"));
+    }
+
+    json() {
+        return ({
+            label: this.label,
+            children: this.children.map(e => e.json()),
+        });
+    }
+
+    find(file) {
+        for (let f of this.children) {
+            if (f.label == file && f.type == "folder") {
+                return f;
+            }
+        }
+    }
+
+    isOpen = false;
+    /**
+     * @type {Tab}
+     */
+    tab = null;
+    open() {
+        // console.log("open", this.content);
+        this.isOpen = true;
+        this.tab = new Tab({
+            name: this.label
+        });
+        console.log("opened", this.tab);
+        this.tab.makeMonaco(this.content);
+    }
+
+    render() {
+        let el = createElement("div");
+        if (this.type == "folder") {
+            let details = createElement("details").add(
+                createElement("summary", {
+                    innerHTML: this.label
+                }),
+                createElement("ul").add(
+                    ...this.children.map(e => createElement("li").add(
+                        e.render()
+                    ))
+                )
+            );
+            details.setAttribute("open", "");
+            el.add(details);
+        } else {
+            let node = this;
+            el.add(createElement("button", {
+                innerHTML: this.label,
+                onclick: function () {
+                    if (node.isOpen) return node.tab.focus();
+                    node.open();
+                }
+            }));
+        }
+        return el;
+    }
+}
+
+async function connectToBoard() {
+    modal("connecting to board");
+    let files = await ampyLS();
+    clearModal();
+    console.log("files:", files);
+    files = files.map(f => {
+        let path = f.path.split("/");
+        path.shift();
+        return { path, content: f.content };
+    });
+    let tree = new FileTree({
+        label: "root",
+        type: "folder"
+    });
+    files.forEach(f => {
+        tree.addFile(f.path, f.content);
+    });
+    console.log(tree.json());
+    document.querySelector(".file-tree").add(tree.render());
 }

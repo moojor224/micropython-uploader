@@ -38,7 +38,7 @@ function waitForKeyElements(query, callback, stopAfterFound, element) {
  * takes in a string and object, and returns an HTMLElement with tag "tag" and properties defined by data\
  * OR\
  * takes in an object and merges the properties from data into it
- * @param {(string|object)} tag html tag name, or object to apply properties to
+ * @param {keyof HTMLElementTagNameMap} tag html tag name, or object to apply properties to
  * @param {object} data object with properties to be applied
  * @returns {HTMLElement}
  * @example

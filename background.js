@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 const { exec } = require("child_process");
 const { SerialPort } = require("serialport");
+const fs = require("node:fs");
+
 
 /**
  * checks if string is a valid serial port
@@ -31,7 +33,7 @@ async function getAllMPFiles(port, event) {
                 exec(`ampy -p ${port} get ${paths[i]}`, function (error, stdout, stderr) {
                     resolve({
                         path: paths[i],
-                        file: stdout
+                        content: (error ? false : (stderr ? false : stdout))
                     });
                 });
             })
@@ -40,6 +42,7 @@ async function getAllMPFiles(port, event) {
     });
 
 }
+
 /**
  * @type {BrowserWindow}
  */
@@ -67,6 +70,20 @@ app.whenReady().then(function () {
 app.on("window-all-closed", function () {
     if (process.platform !== "darwin") {
         app.quit();
+    }
+});
+
+let globals = { __dirname };
+ipcMain.on("get", function (event, packet) {
+    event.reply("get-response", globals[packet]);
+});
+
+let connectedBoard = "";
+ipcMain.on("connect", function (event, packet) {
+    let port = sanitizeSerial(packet);
+    if (!port) {
+        event.reply("connect-response", "piss off, hacker man");
+        return;
     }
 });
 
@@ -121,35 +138,6 @@ ipcMain.on("check-micropython", function (event, packet) {
     });
 });
 
+async function updateFileContents(path, contents) {
 
-
-// ipcMain.on("run", function(event, packet){
-//     exec(packet, function (error, stdout, stderr) {
-//         if (error) console.error("error:", error.message);
-//         if (stderr) console.warn("stderr:", stderr);
-//         event.reply("run-response", stdout);
-//     });
-// });
-// ipcMain.on("toBackground", function (event, packet) {
-//     let { message, data } = packet;
-//     console.log("got message from app", packet);
-//     if (message === "run") {
-
-//     }
-//     if (message === "ampy-help") {
-//
-//     } else if (message === "ampy-ls") {
-//         console.log("ampy ls: listing board files");
-//         let port = sanitizeSerial(data);
-//         if (!port) {
-//             event.reply("toApp", {
-//                 message: "piss off, hacker man",
-//                 data: null
-//             });
-//             return;
-//         }
-//         getAllMPFiles(data, event);
-//     } else if (message == "ports-ls") {
-//
-//     }
-// });
+}

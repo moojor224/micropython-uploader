@@ -34,6 +34,8 @@
                         <form></form><!-- DO NOT REMOVE THIS!!!
                             chrome is stupid and auto-removes the first form inside a form-->
                         <form id="ports-form">
+                            <button type="button" id="connect-button">connect to board</button>
+                            <button type="button" id="ampy-more-help-button">get extended help</button>
                         </form>
                         <pre id="ampy-help"></pre>
                         <pre id="ampy-more-help"></pre>
@@ -87,16 +89,6 @@
             monaco.editor.setTheme("vs-dark");
             monacoAvailable = true;
         });
-        async function awaitMonaco() {
-            while (!monacoAvailable) {
-                await sleep(100);
-            }
-            // let t1 = new Tab({}).makeMonaco();
-            // new Tab({}).makeMonaco();
-            // new Tab({}).makeMonaco();
-            // new Tab({}).makeMonaco();
-            // new Tab({}).makeMonaco();
-        }
 
 
 

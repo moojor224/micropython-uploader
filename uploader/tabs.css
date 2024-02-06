@@ -14,10 +14,7 @@ div.counter::after {
 } */
 
 div.tabbed-view>div.content:has(+div.tabs>tab.tab1>label>input:checked)>div.tab1,
-div.tabbed-view>div.content:has(+div.tabs>tab.tab2>label>input:checked)>div.tab2,
-div.tabbed-view>div.content:has(+div.tabs>tab.tab3>label>input:checked)>div.tab3,
-div.tabbed-view>div.content:has(+div.tabs>tab.tab4>label>input:checked)>div.tab4,
-div.tabbed-view>div.content:has(+div.tabs>tab.tab5>label>input:checked)>div.tab5 {
+div.tabbed-view>div.content:has(+div.tabs>tab.tab2>label>input:checked)>div.tab2 {
     display: block;
 }
 

@@ -1,3 +1,5 @@
+"use strict";
+
 function template(strings, ...keys) {
     return (...values) => {
         const dict = values[values.length - 1] || {};
@@ -10,16 +12,23 @@ function template(strings, ...keys) {
     };
 }
 
-let tabCss = template`div.tabbed-view:has(div.tabs>tab.tab${"index"} input:checked)>div.content>div.tab${"index"}`;
-let arr = [];
-for (let i = 1; i < 10; i++) {
-    arr.push(tabCss({ index: i }));
-}
 
-// console.log(arr.join(",\n"));
+
+
 
 let tabIndex = 0;
-let tabs = [];
+let tabCSS = template`div.tabbed-view:has(div.tabs>tab.tab${"index"} input:checked)>div.content>div.tab${"index"}`;
+let tabStyle = createElement("style");
+document.head.add(tabStyle);
+
+function generateCSS() {
+    let tabCSSArray = [];
+    for (let i = 0; i < tabIndex; i++) {
+        tabCSSArray.push(tabCSS({ index: i }));
+    }
+    tabStyle.innerHTML = `${tabCSSArray.join(",\n")}{\n\tdisplay: block;\n}`
+}
+
 class Tab {
     #tab = this;
     config = {
@@ -31,17 +40,17 @@ class Tab {
         code: `def main():\n    print("this is tab ${this.index}")`,
         autoSaveInterval: 1500,
     }
+
     constructor(config = {}) {
-        this.index = ++tabIndex;
+        this.index = tabIndex++;
         extend(this.config, config);
-        tabs.push(this.makeCss());
 
         this.tab = createElement("tab", {
-            classList: "tab" + tabIndex
+            classList: "tab" + this.index
         }).add(
             createElement("label").add(
                 createElement("span", {
-                    innerHTML: "tab " + tabIndex
+                    innerHTML: "tab " + this.index
                 }),
                 createElement("input", {
                     type: "radio",
@@ -51,21 +60,20 @@ class Tab {
             ),
         );
         this.content = createElement("div", {
-            classList: "tab" + tabIndex
+            classList: "tab" + this.index
         });
         if (typeof this.config.content_container == "string") this.config.content_container = document.querySelector(this.config.content_container);
         if (typeof this.config.tab_container == "string") this.config.tab_container = document.querySelector(this.config.tab_container);
         this.config.content_container.add(this.content);
         this.config.tab_container.add(this.tab);
     }
+
     close() {
         this.monaco.dispose();
         this.content.remove();
         this.tab.remove();
     }
-    makeCss() {
-        return tabCss({ index: tabIndex });
-    }
+
     timeout = null;
     makeMonaco() {
         // console.trace(this.content);
@@ -81,6 +89,10 @@ class Tab {
                 this.saveFile();
             }, this.config.autoSaveInterval);
         });
+    }
+
+    focus() {
+        this.tab.querySelector("input").click();
     }
 
 }

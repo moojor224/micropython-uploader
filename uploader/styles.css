@@ -93,6 +93,10 @@ div.grid-app>div.file-tree {
     grid-column: 1 / span 1;
 }
 
+div.grid-app>div.file-tree ul {
+    list-style: none;
+}
+
 div.grid-app>form.tabbed-form {
     grid-row: 1 / span 1;
     grid-column: 2 / span 1;
